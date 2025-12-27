@@ -1,0 +1,11 @@
+C:\XDev\Touch Gesture Recognition System\Touch Gesture Recognition System\obj\Debug\net6.0-windows\Touch Gesture Recognition System.GeneratedMSBuildEditorConfig.editorconfig
+C:\XDev\Touch Gesture Recognition System\Touch Gesture Recognition System\obj\Debug\net6.0-windows\Touch Gesture Recognition System.AssemblyInfoInputs.cache
+C:\XDev\Touch Gesture Recognition System\Touch Gesture Recognition System\obj\Debug\net6.0-windows\Touch Gesture Recognition System.AssemblyInfo.vb
+C:\XDev\Touch Gesture Recognition System\Touch Gesture Recognition System\obj\Debug\net6.0-windows\Touch Gesture Recognition System.vbproj.CoreCompileInputs.cache
+C:\XDev\Touch Gesture Recognition System\Touch Gesture Recognition System\bin\Debug\net6.0-windows\Touch Gesture Recognition System.deps.json
+C:\XDev\Touch Gesture Recognition System\Touch Gesture Recognition System\bin\Debug\net6.0-windows\Touch Gesture Recognition System.dll
+C:\XDev\Touch Gesture Recognition System\Touch Gesture Recognition System\bin\Debug\net6.0-windows\Touch Gesture Recognition System.pdb
+C:\XDev\Touch Gesture Recognition System\Touch Gesture Recognition System\obj\Debug\net6.0-windows\Touch Gesture Recognition System.dll
+C:\XDev\Touch Gesture Recognition System\Touch Gesture Recognition System\obj\Debug\net6.0-windows\refint\Touch Gesture Recognition System.dll
+C:\XDev\Touch Gesture Recognition System\Touch Gesture Recognition System\obj\Debug\net6.0-windows\Touch Gesture Recognition System.pdb
+C:\XDev\Touch Gesture Recognition System\Touch Gesture Recognition System\obj\Debug\net6.0-windows\ref\Touch Gesture Recognition System.dll
