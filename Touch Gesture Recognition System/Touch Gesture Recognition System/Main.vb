@@ -89,7 +89,5 @@ Public Class Touch_function
 
         Return False ' Return false to allow other message filters to process the message
 
-        '
-
     End Function
 End Class
