@@ -6,88 +6,137 @@ Public Delegate Sub Gesture(ByVal sender As Object, ByVal e As GestureArgs)
 
 Public Class GestureArgs
     Inherits EventArgs
+
     Public Property SwipeDirection As String
-    Public Property _axisY As Integer
+    Public Property AxisY As Integer
 
     Public Sub New(direction As String)
         SwipeDirection = direction
     End Sub
 
-    Public Sub New(pointy As Integer)
-        _axisY = pointy
+    Public Sub New(pointY As Integer)
+        AxisY = pointY
     End Sub
 
 End Class
 
 Public Class Touch_function
+    Implements IMessageFilter
 
-    Implements IMessageFilter ' Implementing IMessageFilter to capture mouse events globally
+    Private ReadOnly screenHeight As Integer = Screen.PrimaryScreen.Bounds.Height
+    Private ReadOnly screenWidth As Integer = Screen.PrimaryScreen.Bounds.Width
+    Private ReadOnly PercentHeight As Integer
+    Private ReadOnly thirtyPercentWidth As Integer
 
-    Dim screenHeight As Integer = Screen.PrimaryScreen.Bounds.Height
-    Dim thirtyPercentHeight As Integer = CInt(screenHeight * 0.3) 'Calculating 30% of all available pixels on the display (scaleable touch)
-    Dim screenWidth As Integer = Screen.PrimaryScreen.Bounds.Width
-    Dim thirtyPercentWidth As Integer = CInt(screenWidth * 0.3) 'Calculating 30% of all available pixels on the display (scaleable touch)
+    Private Const WM_LBUTTONDOWN As Integer = &H201
+    Private Const WM_LBUTTONUP As Integer = &H202
+    Private Const WM_LBUTTONDBLCLK As Integer = &H203
+
+    Private Const LONG_PRESS_MS As Integer = 600
+    Private WithEvents _longPressTimer As New Timer()
+    Private _longPressTriggered As Boolean = False
+
+    Private WithEvents _tapTimer As New Timer()
+    Private _pendingTap As Boolean = False
+
+    Private startPosX As Integer
+    Private startPosY As Integer
 
     Public Event Recognition As Gesture
     Public Event TouchPointY As Gesture
 
-    Private Const WM_LBUTTONDOWN As Integer = &H201 ' Leftmousebutton-down message
-    Private Const WM_LBUTTONUP As Integer = &H202   ' Leftmousebutton-up message
+    Public Sub New()
+        PercentHeight = CInt(screenHeight * 0.2)
+        thirtyPercentWidth = CInt(screenWidth * 0.3)
 
-    Dim startposy As Integer ' Starting Y position of the touch
-    Dim endposy As Integer ' End
+        _longPressTimer.Interval = LONG_PRESS_MS
+        _longPressTimer.Stop()
 
-    Dim startposx As Integer ' Starting X position of the touch
-    Dim endposx As Integer ' End
+        _tapTimer.Interval = SystemInformation.DoubleClickTime
+        _tapTimer.Stop()
+    End Sub
 
-    Private Sub Dictionary_Override()
-        ' Code for automatically setting manually configured screen resolutions, according to CDM
-        ' Currently, CDM is still in a design phase, so this function is not yet implemented
+    Private Sub LongPressTimer_Tick(sender As Object, e As EventArgs) Handles _longPressTimer.Tick
+        _longPressTimer.Stop()
+        _longPressTriggered = True
+        RaiseEvent Recognition(Me, New GestureArgs("ETX"))  ' Event Touch Large (Long Press)
+    End Sub
+
+    Private Sub TapTimer_Tick(sender As Object, e As EventArgs) Handles _tapTimer.Tick
+        _tapTimer.Stop()
+        If _pendingTap Then
+            _pendingTap = False
+            RaiseEvent Recognition(Me, New GestureArgs("ET"))  ' Event Touch (Tap)
+        End If
     End Sub
 
     Public Function PreFilterMessage(ByRef m As Message) As Boolean Implements IMessageFilter.PreFilterMessage
 
-        If m.Msg = WM_LBUTTONDOWN Then
+        Select Case m.Msg
 
-            Dim mouse As Point = Cursor.Position
+            Case WM_LBUTTONDOWN
+                Dim mouse As Point = Cursor.Position
+                startPosX = mouse.X
+                startPosY = mouse.Y
 
-            startposy = mouse.Y
-            startposx = mouse.X
+                _longPressTriggered = False
+                _longPressTimer.Start()
 
-        ElseIf m.Msg = WM_LBUTTONUP Then
+            Case WM_LBUTTONUP
+                _longPressTimer.Stop()
 
-            Dim mouse As Point = Cursor.Position
+                If _longPressTriggered Then
+                    _longPressTriggered = False
+                    Return False
+                End If
 
-            endposy = mouse.Y
-            endposx = mouse.X
+                Dim mouse As Point = Cursor.Position
+                Dim diffX As Integer = mouse.X - startPosX
+                Dim diffY As Integer = mouse.Y - startPosY
 
-            Dim diffy As Integer = endposy - startposy
-            Dim diffx As Integer = endposx - startposx
+                RaiseEvent TouchPointY(Me, New GestureArgs(startPosY))
 
-            RaiseEvent TouchPointY(Me, New GestureArgs(startposy))
+                If diffY > PercentHeight * 2 Then
+                    RaiseEvent Recognition(Me, New GestureArgs("ESDX"))     ' Event Swipe Down Large
 
-            If diffy > thirtyPercentHeight * 2 Then
-                RaiseEvent Recognition(Me, New GestureArgs("ESDX")) ' Event Swipe Down Large
+                ElseIf diffY < -(PercentHeight * 2) Then
+                    RaiseEvent Recognition(Me, New GestureArgs("ESUX"))     ' Event Swipe Up Large
 
-            ElseIf diffy < -thirtyPercentHeight * 2 Then
-                RaiseEvent Recognition(Me, New GestureArgs("ESUX")) ' Event Swipe Up Large
+                ElseIf diffY > PercentHeight Then
+                    RaiseEvent Recognition(Me, New GestureArgs("ESD"))      ' Event Swipe Down
 
-            ElseIf diffy > thirtyPercentHeight Then
-                RaiseEvent Recognition(Me, New GestureArgs("ESD")) ' Event Swipe Down
+                ElseIf diffY < -PercentHeight Then
+                    RaiseEvent Recognition(Me, New GestureArgs("ESU"))      ' Event Swipe Up
 
-            ElseIf diffy < -thirtyPercentHeight Then
-                RaiseEvent Recognition(Me, New GestureArgs("ESU")) ' Event Swipe Up
+                ElseIf diffX > thirtyPercentWidth Then
+                    RaiseEvent Recognition(Me, New GestureArgs("ESR"))      ' Event Swipe Right
 
-            ElseIf diffx > thirtyPercentWidth Then ' Horizontal Swipe Detection
-                RaiseEvent Recognition(Me, New GestureArgs("ESR")) ' Event Swipe Right
+                ElseIf diffX < -thirtyPercentWidth Then
+                    RaiseEvent Recognition(Me, New GestureArgs("ESL"))      ' Event Swipe Left
 
-            ElseIf diffx < -thirtyPercentWidth Then ' Horizontal Swipe Detection
-                RaiseEvent Recognition(Me, New GestureArgs("ESL")) ' Event Swipe Left
-            End If
+                Else
+                    _pendingTap = True
+                    _tapTimer.Stop()
+                    _tapTimer.Start()
 
-        End If
+                End If
 
-        Return False ' Return false to allow other message filters to process the message
+            Case WM_LBUTTONDBLCLK
+                _longPressTimer.Stop()
+                _longPressTriggered = False
+                _tapTimer.Stop()
+                _pendingTap = False
+
+                RaiseEvent Recognition(Me, New GestureArgs("ET2"))          ' Event Touch Twice
+
+        End Select
+
+        Return False
 
     End Function
+
+    Private Sub Dictionary_Override()
+
+    End Sub
+
 End Class

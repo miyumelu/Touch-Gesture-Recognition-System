@@ -1,11 +1,11 @@
 {
-  "version": 3,
+  "version": 4,
   "targets": {
-    "net6.0-windows7.0": {}
+    "net6.0-windows": {}
   },
   "libraries": {},
   "projectFileDependencyGroups": {
-    "net6.0-windows7.0": []
+    "net6.0-windows": []
   },
   "packageFolders": {
     "C:\\Users\\deniz\\.nuget\\packages\\": {}
@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\XDev\\Touch Gesture Recognition System\\Touch Gesture Recognition System\\Touch Gesture Recognition System.vbproj",
+      "projectUniqueName": "C:\\Users\\deniz\\Documents\\GitHub\\Touch-Gesture-Recognition-System\\Touch Gesture Recognition System\\Touch Gesture Recognition System\\Touch Gesture Recognition System.vbproj",
       "projectName": "Touch Gesture Recognition System",
-      "projectPath": "C:\\XDev\\Touch Gesture Recognition System\\Touch Gesture Recognition System\\Touch Gesture Recognition System.vbproj",
+      "projectPath": "C:\\Users\\deniz\\Documents\\GitHub\\Touch-Gesture-Recognition-System\\Touch Gesture Recognition System\\Touch Gesture Recognition System\\Touch Gesture Recognition System.vbproj",
       "packagesPath": "C:\\Users\\deniz\\.nuget\\packages\\",
-      "outputPath": "C:\\XDev\\Touch Gesture Recognition System\\Touch Gesture Recognition System\\obj\\",
+      "outputPath": "C:\\Users\\deniz\\Documents\\GitHub\\Touch-Gesture-Recognition-System\\Touch Gesture Recognition System\\Touch Gesture Recognition System\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\deniz\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -32,7 +32,8 @@
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net6.0-windows7.0": {
+        "net6.0-windows": {
+          "framework": "net6.0-windows7.0",
           "targetAlias": "net6.0-windows",
           "projectReferences": {}
         }
@@ -47,10 +48,11 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "10.0.100"
+      "SdkAnalysisLevel": "10.0.300"
     },
     "frameworks": {
-      "net6.0-windows7.0": {
+      "net6.0-windows": {
+        "framework": "net6.0-windows7.0",
         "targetAlias": "net6.0-windows",
         "imports": [
           "net461",
@@ -71,7 +73,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.101\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301\\RuntimeIdentifierGraph.json"
       }
     }
   }
